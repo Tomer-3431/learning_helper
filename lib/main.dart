@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:learning_helper/constants/ui_constants.dart';
 import 'package:learning_helper/login/login_screen.dart';
 
 void main() {
@@ -10,7 +11,14 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      theme: ThemeData(
+        useMaterial3: true,
+        primaryColor: Colors.green.shade900,
+        cardColor: Colors.teal.shade100,
+        appBarTheme: appBarTheme,
+        brightness: Brightness.dark,
+      ),
       home: LoginScreen(),
     );
   }
