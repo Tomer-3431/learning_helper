@@ -11,62 +11,13 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
 
-  @override
-  void initState() {
-    super.initState();
-    
-    isVisable = false;
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
-
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 20,
-          children: [
-            Text('Login', style: h1),
-            _nameField,
-            _emailField,
-            _passwordField
-          ],
-        ),
-      ),
-    );
-  }
-
   final TextEditingController _nameController = TextEditingController();
-  Widget get _nameField =>
-      SizedBox(
-        width: MediaQuery.of(context).size.width * 0.4,
-        child: TextField(
-          textAlign: .left,
-          keyboardType: .name,
-          textInputAction: TextInputAction.next,
-          autofocus: false,
-          controller: _nameController,
-          decoration: InputDecoration(
-            labelText: 'Name',
-            hint: Text(
-              'Enter Your Name: '
-            )
-          ),    
-        ),
-      );
 
   final TextEditingController _emailController = TextEditingController();
+
+  bool isVisable = false;
+
+  final TextEditingController _passwordController = TextEditingController();
   Widget get _emailField =>
       SizedBox(
         width: MediaQuery.of(context).size.width * 0.4,
@@ -90,8 +41,23 @@ class _LoginState extends State<Login> {
         ),
       );
 
-  bool isVisable = false;
-  final TextEditingController _passwordController = TextEditingController();
+  Widget get _nameField =>
+      SizedBox(
+        width: MediaQuery.of(context).size.width * 0.4,
+        child: TextField(
+          textAlign: .left,
+          keyboardType: .name,
+          textInputAction: TextInputAction.next,
+          autofocus: false,
+          controller: _nameController,
+          decoration: InputDecoration(
+            labelText: 'Name',
+            hint: Text(
+              'Enter Your Name: '
+            )
+          ),    
+        ),
+      );
   Widget get _passwordField =>
       SizedBox(
         width: MediaQuery.of(context).size.width * 0.4,
@@ -124,4 +90,38 @@ class _LoginState extends State<Login> {
           ),
         ),
       );
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 20,
+          children: [
+            Text('Login', style: h1),
+            _nameField,
+            _emailField,
+            _passwordField
+          ],
+        ),
+      ),
+    );
+  }
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+
+    super.dispose();
+  }
+  @override
+  void initState() {
+    super.initState();
+    
+    isVisable = false;
+  }
 }
