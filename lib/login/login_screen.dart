@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learning_helper/constants/ui_constants.dart';
+import 'package:learning_helper/login/google_sign.dart';
 import 'package:learning_helper/login/login.dart';
 import 'package:learning_helper/login/signup.dart';
 
@@ -40,34 +40,10 @@ class _LoginScreenState extends State<LoginScreen> {
             Spacer(),
             Spacer(),
             Divider(),
-            _buildGoogleLogin(),
+            GoogleSign(),
             Spacer(),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildGoogleLogin() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
-      child: Row(
-        // crossAxisAlignment: CrossAxisAlignment.stretch,
-        spacing: 20,
-        children: [
-          Text('Login With Google'),
-          Container(
-            width: 100,
-            height: 50,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Theme.of(context).primaryColor),
-            ),
-            child: Center(
-              child: Text('PLACE HOLDER', textAlign: TextAlign.center),
-            ),
-          ),
-        ],
       ),
     );
   }
