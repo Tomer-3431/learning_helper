@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:learning_helper/constants/ui_constants.dart';
+import 'package:learning_helper/login/login.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -22,12 +24,12 @@ class _LoginScreenState extends State<LoginScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildLogin(),
+                Login(),
                 Container(
                   height: 500,
                   decoration: BoxDecoration(
                     border: Border.symmetric(
-                      vertical: BorderSide(width: 2, color: Colors.black),
+                      vertical: BorderSide(width: 2, color: Colors.white),
                     ),
                   ),
                 ),
@@ -45,41 +47,16 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildLogin() {
-    return Expanded(
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 20,
-          children: [
-            Text('Login', style: TextStyle(fontSize: 18)),
-            Text(
-              'UserName',
-              style: TextStyle(decoration: TextDecoration.underline),
-            ),
-            Text('Email', style: TextStyle(decoration: TextDecoration.underline)),
-            Text(
-              'Password',
-              style: TextStyle(decoration: TextDecoration.underline),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildSignup() {
     return Expanded(
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 20,
           children: [
-            Text('Sign Up', style: TextStyle(fontSize: 18)),
+            Text('Sign Up', style: h1),
             Text(
               'UserName',
               style: TextStyle(decoration: TextDecoration.underline),
