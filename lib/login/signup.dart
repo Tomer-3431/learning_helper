@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:learning_helper/constants/ui_constants.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
-
+class Signup extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _LoginState();
+  State<StatefulWidget> createState() => _SignupState();
 }
 
-class _LoginState extends State<Login> {
+class _SignupState extends State<Signup>{
+  final TextEditingController _nameController = TextEditingController();
+
   final TextEditingController _emailController = TextEditingController();
 
   bool isVisable = false;
@@ -37,6 +36,28 @@ class _LoginState extends State<Login> {
         ).hasMatch(value.trim());
 
         if (!isValid) return 'Please Enter a valid email address';
+
+        return null;
+      },
+    ),
+  );
+
+  Widget get _nameField => SizedBox(
+    width: MediaQuery.of(context).size.width * 0.4,
+    child: TextFormField(
+      textAlign: .left,
+      keyboardType: .name,
+      textInputAction: TextInputAction.next,
+      autofocus: false,
+      controller: _nameController,
+      decoration: InputDecoration(
+        labelText: 'Name',
+        hint: Text('Enter Your Name: '),
+      ),
+      validator: (value) {
+        if (value == null || value.trim().isEmpty) {
+          return 'Name field cannot be empty';
+        }
 
         return null;
       },
@@ -94,7 +115,8 @@ class _LoginState extends State<Login> {
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 20,
             children: [
-              Text('Login', style: h1),
+              Text('Signup', style: TextTheme.of(context).titleLarge),
+              _nameField,
               _emailField,
               _passwordField,
               ElevatedButton(
@@ -116,6 +138,7 @@ class _LoginState extends State<Login> {
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
 

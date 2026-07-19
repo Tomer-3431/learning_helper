@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:learning_helper/constants/ui_constants.dart';
 import 'package:learning_helper/login/login.dart';
+import 'package:learning_helper/login/signup.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -22,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             Spacer(),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Login(),
                 Container(
@@ -33,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-                _buildSignup(),
+                Signup()
               ],
             ),
             Spacer(),
@@ -41,31 +42,6 @@ class _LoginScreenState extends State<LoginScreen> {
             Divider(),
             _buildGoogleLogin(),
             Spacer(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSignup() {
-    return Expanded(
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 20,
-          children: [
-            Text('Sign Up', style: h1),
-            Text(
-              'UserName',
-              style: TextStyle(decoration: TextDecoration.underline),
-            ),
-            Text('Email', style: TextStyle(decoration: TextDecoration.underline)),
-            Text(
-              'Password',
-              style: TextStyle(decoration: TextDecoration.underline),
-            ),
           ],
         ),
       ),
