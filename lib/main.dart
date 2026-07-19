@@ -12,13 +12,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        useMaterial3: true,
-        primaryColor: Colors.green.shade900,
-        cardColor: Colors.teal.shade100,
-        appBarTheme: appBarTheme,
-        brightness: Brightness.dark,
-      ),
+      theme: appTheme,
       home: LoginScreen(),
     );
   }
