@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:learning_helper/constants/color_constants.dart';
 
-class GoogleSign extends StatefulWidget {
+class PlatformLogin extends StatefulWidget {
+  const PlatformLogin({super.key});
+
   @override
-  State<StatefulWidget> createState() => _GoogleSignState();
+  State<StatefulWidget> createState() => _PlatformLoginState();
 }
 
 String googleSVG = '''
@@ -17,7 +19,7 @@ String googleSVG = '''
       </svg>
 ''';
 
-class _GoogleSignState extends State<GoogleSign> {
+class _PlatformLoginState extends State<PlatformLogin> {
   @override
   Widget build(BuildContext context) {
     return Row(

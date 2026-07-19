@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learning_helper/login/google_sign.dart';
+import 'package:learning_helper/login/platform_login.dart';
 import 'package:learning_helper/login/login.dart';
 import 'package:learning_helper/login/signup.dart';
 
@@ -40,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
             Spacer(),
             Spacer(),
             Divider(),
-            GoogleSign(),
+            PlatformLogin(),
             Spacer(),
           ],
         ),
