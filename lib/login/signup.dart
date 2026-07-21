@@ -1,11 +1,75 @@
+import 'package:firebase_auth/firebase_auth.dart' hide User;
+import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:learning_helper/db/global.dart';
+import 'package:learning_helper/db/user.dart';
 
 class Signup extends StatefulWidget {
+  const Signup({super.key});
+
   @override
   State<StatefulWidget> createState() => _SignupState();
 }
 
 class _SignupState extends State<Signup>{
+  Future<void> _createNewUser() async {
+    try {
+      final name = _nameController.text.trim();
+      final email = _emailController.text.trim();
+
+      final UserCredential userCredential = await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(email: email, password: email);
+
+      final uid = userCredential.user!.uid;
+
+      await userCredential.user!.updateDisplayName(name);
+
+      await _createDatabaseUesr(userId: uid, name: name, email: email);
+
+      await _setCurrentUser(userId: uid, name: name, email: email);
+
+      if (mounted) {
+        
+      }
+    } on FirebaseException catch (e) {
+      if (kDebugMode) {
+        print(e.code);
+      }
+
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+  }
+
+  Future<void> _createDatabaseUesr({
+    required String userId,
+    required String name,
+    required String email,
+  }) async {
+    final DatabaseReference userRefrence = FirebaseDatabase.instance.ref('users/$userId');
+
+    await userRefrence.set({
+      'name': name,
+      'email': email,
+    });
+  }
+
+  Future<void> _setCurrentUser({
+    required String userId,
+    required String name,
+    required String email,
+  }) async {
+
+    currentUser = User(
+      uid: userId,
+      name: name,
+      email: email,
+    );
+  }
+
   final TextEditingController _nameController = TextEditingController();
 
   final TextEditingController _emailController = TextEditingController();
@@ -122,6 +186,7 @@ class _SignupState extends State<Signup>{
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
+                    _createNewUser();
                   }
                 }, 
                 child: Text(

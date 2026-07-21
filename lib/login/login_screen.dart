@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:learning_helper/db/global.dart';
 import 'package:learning_helper/login/platform_login.dart';
 import 'package:learning_helper/login/login.dart';
 import 'package:learning_helper/login/signup.dart';
@@ -21,6 +22,9 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           spacing: 10,
           children: [
+            Text(
+              currentUser?.name ?? ''
+            ),
             Spacer(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
