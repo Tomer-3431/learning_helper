@@ -21,11 +21,13 @@ class _SignupState extends State<Signup>{
       final UserCredential userCredential = await FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: email);
 
+      // Future.delayed(Durations.extralong4);
+      
       final uid = userCredential.user!.uid;
 
       await userCredential.user!.updateDisplayName(name);
 
-      await _createDatabaseUesr(userId: uid, name: name, email: email);
+      await _createDatabaseUser(userId: uid, name: name, email: email);
 
       await _setCurrentUser(userId: uid, name: name, email: email);
 
@@ -44,7 +46,7 @@ class _SignupState extends State<Signup>{
     }
   }
 
-  Future<void> _createDatabaseUesr({
+  Future<void> _createDatabaseUser({
     required String userId,
     required String name,
     required String email,

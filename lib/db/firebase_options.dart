@@ -47,6 +47,7 @@ class DefaultFirebaseOptions {
     projectId: 'leaning-helper',
     authDomain: 'leaning-helper.firebaseapp.com',
     storageBucket: 'leaning-helper.firebasestorage.app',
+    databaseURL: 'https://leaning-helper-default-rtdb.europe-west1.firebasedatabase.app/',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
@@ -55,6 +56,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '249169509260',
     projectId: 'leaning-helper',
     storageBucket: 'leaning-helper.firebasestorage.app',
+    databaseURL: 'https://leaning-helper-default-rtdb.europe-west1.firebasedatabase.app/',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
@@ -63,6 +65,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '249169509260',
     projectId: 'leaning-helper',
     storageBucket: 'leaning-helper.firebasestorage.app',
+    databaseURL: 'https://leaning-helper-default-rtdb.europe-west1.firebasedatabase.app/',
     iosBundleId: 'com.example.learningHelper',
   );
 
@@ -73,6 +76,7 @@ class DefaultFirebaseOptions {
     projectId: 'leaning-helper',
     storageBucket: 'leaning-helper.firebasestorage.app',
     iosBundleId: 'com.example.learningHelper',
+    databaseURL: 'https://leaning-helper-default-rtdb.europe-west1.firebasedatabase.app/',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
@@ -81,6 +85,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '249169509260',
     projectId: 'leaning-helper',
     authDomain: 'leaning-helper.firebaseapp.com',
+    databaseURL: 'https://leaning-helper-default-rtdb.europe-west1.firebasedatabase.app/',
     storageBucket: 'leaning-helper.firebasestorage.app',
   );
 }
