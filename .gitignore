@@ -46,3 +46,6 @@ app.*.map.json
 
 # Ignore secret files
 android/app/google-services.json
+
+# Ignore secret folder (later will change to something more secure)
+lib/secrets
