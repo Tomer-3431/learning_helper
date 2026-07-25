@@ -79,89 +79,85 @@ class _SocialLoginState extends State<SocialLogin> {
           SizedBox(height: 10),
         Container(
           constraints: BoxConstraints(maxHeight: 50, maxWidth: 780),
-          child: Expanded(
-            child: OutlinedButton(
-              onPressed: _signinWithGoogle,
-              style: OutlinedButton.styleFrom(
-                backgroundColor: Color(0xFF131314),
-                foregroundColor: Color(0xFFE3E3E3),
-                side: BorderSide(color: Color(0xFF8E918F), width: 1),
-                shape: StadiumBorder(),
-                padding: EdgeInsets.only(left: 12, right: 20),
-              ),
-              child: Row(
-                spacing: 12,
-                mainAxisAlignment: .start,
-                crossAxisAlignment: .center,
-                children: [
-                  Container(
-                    width: 30,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      // color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    padding: EdgeInsets.all(2),
-                    margin: EdgeInsets.symmetric(vertical: 4),
-                    child: SvgPicture.string(googleSVG),
+          child: OutlinedButton(
+            onPressed: _signinWithGoogle,
+            style: OutlinedButton.styleFrom(
+              backgroundColor: Color(0xFF131314),
+              foregroundColor: Color(0xFFE3E3E3),
+              side: BorderSide(color: Color(0xFF8E918F), width: 1),
+              shape: StadiumBorder(),
+              padding: EdgeInsets.only(left: 12, right: 20),
+            ),
+            child: Row(
+              spacing: 12,
+              mainAxisAlignment: .start,
+              crossAxisAlignment: .center,
+              children: [
+                Container(
+                  width: 30,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    // color: Colors.white,
+                    shape: BoxShape.circle,
                   ),
-                  Spacer(),
-                  Text(
-                    'Continue with Google',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      letterSpacing: 0.25,
-                      fontFamily: 'Roboto',
-                    ),
+                  padding: EdgeInsets.all(2),
+                  margin: EdgeInsets.symmetric(vertical: 4),
+                  child: SvgPicture.string(googleSVG),
+                ),
+                Spacer(),
+                Text(
+                  'Continue with Google',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: 0.25,
+                    fontFamily: 'Roboto',
                   ),
-                  Spacer(),
-                ],
-              ),
+                ),
+                Spacer(),
+              ],
             ),
           ),
         ),
         Container(
           constraints: BoxConstraints(maxHeight: 50, maxWidth: 780),
-          child: Expanded(
-            child: OutlinedButton(
-              onPressed: _signinWithGithub,
-              style: OutlinedButton.styleFrom(
-                backgroundColor: Color(0xFF131314),
-                foregroundColor: Color(0xFFE3E3E3),
-                side: BorderSide(color: Color(0xFF8E918F), width: 1),
-                shape: StadiumBorder(),
-                padding: EdgeInsets.only(left: 12, right: 20),
-              ),
-              child: Row(
-                spacing: 12,
-                mainAxisAlignment: .start,
-                crossAxisAlignment: .center,
-                children: [
-                  Container(
-                    width: 30,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    padding: EdgeInsets.all(2),
-                    margin: EdgeInsets.symmetric(vertical: 4),
-                    child: SvgPicture.string(githubSVG),
+          child: OutlinedButton(
+            onPressed: _signinWithGithub,
+            style: OutlinedButton.styleFrom(
+              backgroundColor: Color(0xFF131314),
+              foregroundColor: Color(0xFFE3E3E3),
+              side: BorderSide(color: Color(0xFF8E918F), width: 1),
+              shape: StadiumBorder(),
+              padding: EdgeInsets.only(left: 12, right: 20),
+            ),
+            child: Row(
+              spacing: 12,
+              mainAxisAlignment: .start,
+              crossAxisAlignment: .center,
+              children: [
+                Container(
+                  width: 30,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
                   ),
-                  Spacer(),
-                  Text(
-                    'Continue with github',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      letterSpacing: 0.25,
-                      fontFamily: 'Roboto',
-                    ),
+                  padding: EdgeInsets.all(2),
+                  margin: EdgeInsets.symmetric(vertical: 4),
+                  child: SvgPicture.string(githubSVG),
+                ),
+                Spacer(),
+                Text(
+                  'Continue with github',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: 0.25,
+                    fontFamily: 'Roboto',
                   ),
-                  Spacer(),
-                ],
-              ),
+                ),
+                Spacer(),
+              ],
             ),
           ),
         ),

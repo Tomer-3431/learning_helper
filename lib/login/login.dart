@@ -167,14 +167,12 @@ class _LoginState extends State<Login> {
               color: secondaryColor,
               minimumSize: Size(775, 50),
               mouseCursor: SystemMouseCursors.click,
-              child: Expanded(
-                child: Center(
-                  child: Text(
-                    'Login with email and password',
-                    style: TextTheme.of(context).labelLarge?.copyWith(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
+              child: Center(
+                child: Text(
+                  'Login with email and password',
+                  style: TextTheme.of(context).labelLarge?.copyWith(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),

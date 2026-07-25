@@ -1,5 +1,11 @@
 # Project-level configuration.
 cmake_minimum_required(VERSION 3.14)
+# Suppress CMake developer warnings (like policy CMP0175 from plugins)
+set(CMAKE_SUPPRESS_DEVELOPER_WARNINGS TRUE CACHE INTERNAL "Suppress dev warnings")
+
+if(POLICY CMP0175)
+  cmake_policy(SET CMP0175 OLD)
+endif()
 project(learning_helper LANGUAGES CXX)
 
 # The name of the executable created for the application. Change this to change
