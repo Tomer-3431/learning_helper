@@ -2,7 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:learning_helper/constants/ui_constants.dart';
 import 'package:learning_helper/db/firebase_options.dart';
-import 'package:learning_helper/login/login_screen.dart';
+import 'package:learning_helper/home/home_screen.dart';
+import 'package:learning_helper/login/signin_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -20,7 +21,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: appTheme,
-      home: LoginScreen(),
+      home: SigninScreen(),
     );
   }
 }

@@ -1,12 +1,19 @@
+import 'package:desktop_webview_auth/desktop_webview_auth.dart';
+import 'package:desktop_webview_auth/google.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide User;
+import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:learning_helper/constants/color_constants.dart';
+import 'package:learning_helper/db/global.dart';
+import 'package:learning_helper/db/user.dart';
+import 'package:learning_helper/secrets/secrets.dart';
 
-class PlatformLogin extends StatefulWidget {
-  const PlatformLogin({super.key});
+class SocialLogin extends StatefulWidget {
+  const SocialLogin({super.key});
 
   @override
-  State<StatefulWidget> createState() => _PlatformLoginState();
+  State<StatefulWidget> createState() => _SocialLoginState();
 }
 
 String googleSVG = '''
@@ -25,104 +32,267 @@ String githubSVG = '''
 </svg>
 ''';
 
-class _PlatformLoginState extends State<PlatformLogin> {
+class _SocialLoginState extends State<SocialLogin> {
+  String? _errorMessege;
+  
+  final String redirectUri = 'https://learning-helper.web.app/__/auth/handler';
+  late final GoogleSignInArgs googleArgs;
+
+  @override
+  void initState() {
+    super.initState();
+
+    googleArgs = GoogleSignInArgs(
+      clientId: webClientId,
+      redirectUri: redirectUri,
+      scope: 'email profile'
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
       spacing: 20,
       children: [
-        Text('Login or Signup through Social Platform: '),
-        Expanded(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            spacing: 10,
-            children: [
-              Container(
-                width: 200,
-                height: 40,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: primaryColor, width: 2),
-                ),
-                child: Center(child: Text('PLACE HOLDER')),
+        Text(
+          'Login or Signup through Social Platform: ',
+          style: TextTheme.of(context).labelLarge,
+        ),
+        SizedBox(height: 50),
+        if (_errorMessege != null) ...[
+          Text(
+            _errorMessege!,
+            style: TextTheme.of(context).bodySmall!.copyWith(color: Colors.red),
+          ),
+          SizedBox(height: 5),
+        ] else
+          SizedBox(height: 10),
+        Container(
+          constraints: BoxConstraints(maxHeight: 50, maxWidth: 780),
+          child: Expanded(
+            child: OutlinedButton(
+              onPressed: _signinWithGoogle,
+              style: OutlinedButton.styleFrom(
+                backgroundColor: Color(0xFF131314),
+                foregroundColor: Color(0xFFE3E3E3),
+                side: BorderSide(color: Color(0xFF8E918F), width: 1),
+                shape: StadiumBorder(),
+                padding: EdgeInsets.only(left: 12, right: 20),
               ),
-              OutlinedButton(
-                onPressed: () {},
-                style: OutlinedButton.styleFrom(
-                  backgroundColor: Color(0xFF131314),
-                  foregroundColor: Color(0xFFE3E3E3),
-                  side: BorderSide(color: Color(0xFF8E918F), width: 1),
-                  shape: StadiumBorder(),
-                  padding: EdgeInsets.only(left: 12, right: 20),
-                ),
-                child: Row(
-                  mainAxisSize: .min,
-                  spacing: 8,
-                  children: [
-                    Container(
-                      width: 30,
-                      height: 30,
-                      decoration: BoxDecoration(
-                        // color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                      padding: EdgeInsets.all(2),
-                      margin: EdgeInsets.symmetric(vertical: 4),
-                      child: SvgPicture.string(googleSVG),
+              child: Row(
+                spacing: 12,
+                mainAxisAlignment: .start,
+                crossAxisAlignment: .center,
+                children: [
+                  Container(
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      // color: Colors.white,
+                      shape: BoxShape.circle,
                     ),
-                    Text(
-                      'Continue with Google',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: 0.25,
-                        fontFamily: 'Roboto',
-                      ),
+                    padding: EdgeInsets.all(2),
+                    margin: EdgeInsets.symmetric(vertical: 4),
+                    child: SvgPicture.string(googleSVG),
+                  ),
+                  Spacer(),
+                  Text(
+                    'Continue with Google',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 0.25,
+                      fontFamily: 'Roboto',
                     ),
-                  ],
-                ),
+                  ),
+                  Spacer(),
+                ],
               ),
-              OutlinedButton(
-                onPressed: () {},
-                style: OutlinedButton.styleFrom(
-                  backgroundColor: Color(0xFF131314),
-                  foregroundColor: Color(0xFFE3E3E3),
-                  side: BorderSide(color: Color(0xFF8E918F), width: 1),
-                  shape: StadiumBorder(),
-                  padding: EdgeInsets.only(left: 12, right: 20),
-                ),
-                child: Row(
-                  mainAxisSize: .min,
-                  spacing: 8,
-                  children: [
-                    Container(
-                      width: 30,
-                      height: 30,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                      padding: EdgeInsets.all(2),
-                      margin: EdgeInsets.symmetric(vertical: 4),
-                      child: SvgPicture.string(githubSVG),
-                    ),
-                    Text(
-                      'Continue with github',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: 0.25,
-                        fontFamily: 'Roboto',
-                      ),
-                    ),
-                  ],
-                ),
+            ),
+          ),
+        ),
+        Container(
+          constraints: BoxConstraints(maxHeight: 50, maxWidth: 780),
+          child: Expanded(
+            child: OutlinedButton(
+              onPressed: _signinWithGithub,
+              style: OutlinedButton.styleFrom(
+                backgroundColor: Color(0xFF131314),
+                foregroundColor: Color(0xFFE3E3E3),
+                side: BorderSide(color: Color(0xFF8E918F), width: 1),
+                shape: StadiumBorder(),
+                padding: EdgeInsets.only(left: 12, right: 20),
               ),
-            ],
+              child: Row(
+                spacing: 12,
+                mainAxisAlignment: .start,
+                crossAxisAlignment: .center,
+                children: [
+                  Container(
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                    ),
+                    padding: EdgeInsets.all(2),
+                    margin: EdgeInsets.symmetric(vertical: 4),
+                    child: SvgPicture.string(githubSVG),
+                  ),
+                  Spacer(),
+                  Text(
+                    'Continue with github',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 0.25,
+                      fontFamily: 'Roboto',
+                    ),
+                  ),
+                  Spacer(),
+                ],
+              ),
+            ),
           ),
         ),
       ],
     );
+  }
+
+  void _signinWithGoogle() async {
+    setState(() {
+      _errorMessege = null;
+    });
+
+    try {
+      final AuthResult? result = await DesktopWebviewAuth.signIn(googleArgs);
+
+      if (result == null || result.accessToken == null) {
+        setState(() {
+          _errorMessege = 'Google sign in failed';
+        });
+
+        if (kDebugMode) print('Google sign in failed');
+        return;
+      }
+
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: result.accessToken,
+      );
+
+      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+
+      await _handleUserSession(userCredential);
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        _errorMessege = 'Firebase Auth Exception: ${e.message}';
+      });
+
+      if (kDebugMode) {
+        print(e.code);
+      }
+    } on FirebaseException catch (e) {
+      setState(() {
+        _errorMessege = 'Firebase Exception: ${e.message}';
+      });
+
+      if (kDebugMode) {
+        print(e.code);
+      }
+    } catch (e) {
+      if (kDebugMode) print(e);
+    }
+  }
+
+  void _signinWithGithub() async {
+    setState(() => _errorMessege = null);
+
+    try {
+      // final AuthCredential credential;
+
+      // if (_isDesktop) {
+      //   // Desktop (Windows) OAuth Flow
+      //   final githubSignInArgs = GithubSignInArgs(
+      //     clientId: _githubClientId,
+      //     clientSecret: _githubClientSecret,
+      //     redirectUrl: _githubRedirectUrl,
+      //     scope: 'read:user user:email',
+      //   );
+
+      //   final result = await desktop_auth.DesktopWebviewAuth.signIn(
+      //     githubSignInArgs,
+      //   );
+
+      //   if (result == null) return;
+
+      //   credential = GithubAuthProvider.credential(result.accessToken!);
+      // } else if (kIsWeb) {
+      //   // Web Flow
+      //   final GithubAuthProvider githubProvider = GithubAuthProvider();
+      //   final userCredential = await FirebaseAuth.instance.signInWithPopup(
+      //     githubProvider,
+      //   );
+      //   await _handleUserSession(userCredential);
+      //   return;
+      // } else {
+      //   // Mobile Flow
+      //   final GithubAuthProvider githubProvider = GithubAuthProvider();
+      //   final userCredential = await FirebaseAuth.instance.signInWithProvider(
+      //     githubProvider,
+      //   );
+      //   await _handleUserSession(userCredential);
+      //   return;
+      // }
+
+      // final UserCredential userCredential = await FirebaseAuth.instance
+      //     .signInWithCredential(credential);
+      // await _handleUserSession(userCredential);
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        _errorMessege = 'GitHub Auth Exception: ${e.message}';
+      });
+      if (kDebugMode) print(e.code);
+    } on FirebaseException catch (e) {
+      setState(() {
+        _errorMessege = 'Firebase Exception: ${e.message}';
+      });
+      if (kDebugMode) print(e.code);
+    } catch (e) {
+      setState(() {
+        _errorMessege = 'GitHub Signin Failed: $e';
+      });
+      if (kDebugMode) print(e);
+    }
+  }
+
+  Future<void> _createDatabaseUser({
+    required String userId,
+    required String name,
+    required String email,
+  }) async {
+    final DatabaseReference userRefrence = FirebaseDatabase.instance.ref(
+      'users/$userId',
+    );
+
+    await userRefrence.set({'name': name, 'email': email});
+  }
+
+  Future<void> _handleUserSession(UserCredential userCredential) async {
+    final firebaseUser = userCredential.user;
+    if (firebaseUser == null) return;
+
+    final String uid = firebaseUser.uid;
+    final String name = firebaseUser.displayName ?? '';
+    final String email = firebaseUser.email ?? '';
+
+    final DatabaseReference ref = FirebaseDatabase.instance.ref('users/$uid');
+
+    final snapshot = await ref.get();
+    if (!snapshot.exists) {
+      await _createDatabaseUser(userId: uid, name: name, email: email);
+    }
+
+    currentUser = User(uid: uid, name: name, email: email);
   }
 }

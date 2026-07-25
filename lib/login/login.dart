@@ -1,5 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart' hide User;
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:learning_helper/constants/ui_constants.dart';
+import 'package:learning_helper/constants/color_constants.dart';
+import 'package:learning_helper/db/global.dart';
+import 'package:learning_helper/db/user.dart';
+import 'package:learning_helper/home/home_screen.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -9,6 +15,62 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  String? _errorMessege;
+
+  Future<void> _loginUser() async {
+    try {
+      setState(() {
+        _errorMessege = null;
+      });
+
+      final email = _emailController.text.trim();
+      final password = _passwordController.text.trim();
+
+      final UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+
+      final uid = userCredential.user!.uid;
+
+      _setCurrentUser(
+        userId: uid,
+        name: userCredential.user!.displayName,
+        email: userCredential.user!.email,
+      );
+
+      if (mounted) {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
+      }
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        _errorMessege = 'Firebase Auth Exception: ${e.message}';
+      });
+
+      if (kDebugMode) {
+        print(e.code);
+      }
+    } on FirebaseException catch (e) {
+      setState(() {
+        _errorMessege = 'Firebasea Exception: ${e.message}';
+      });
+
+      if (kDebugMode) {
+        print(e.code);
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+  }
+
+  Future<void> _setCurrentUser({
+    required String userId,
+    String? name,
+    String? email,
+  }) async {
+    currentUser = User.fromUID(uid: userId, name: name, email: email);
+  }
+
   final TextEditingController _emailController = TextEditingController();
 
   bool isVisable = false;
@@ -70,7 +132,7 @@ class _LoginState extends State<Login> {
           ),
         ),
       ),
-      validator:(value) {
+      validator: (value) {
         if (value == null || value.trim().isEmpty) {
           return 'Password cannot be empty';
         }
@@ -84,31 +146,47 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 20,
-            children: [
-              Text('Login', style: h1),
-              _emailField,
-              _passwordField,
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                  }
-                }, 
-                child: Text(
-                  'submit',
-                  style: TextTheme.of(context).labelLarge,
-                )
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 20,
+          children: [
+            _emailField,
+            _passwordField,
+            SizedBox(height: 10),
+            CupertinoButton.filled(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  _loginUser();
+                }
+              },
+              color: secondaryColor,
+              minimumSize: Size(775, 50),
+              mouseCursor: SystemMouseCursors.click,
+              child: Expanded(
+                child: Center(
+                  child: Text(
+                    'Login with email and password',
+                    style: TextTheme.of(context).labelLarge?.copyWith(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ),
-            ],
-          ),
+            ),
+            if (_errorMessege != null)
+              Text(
+                _errorMessege!,
+                style: TextTheme.of(
+                  context,
+                ).bodySmall?.copyWith(color: Colors.red),
+              ),
+          ],
         ),
       ),
     );

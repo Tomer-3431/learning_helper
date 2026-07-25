@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:learning_helper/constants/color_constants.dart';
 import 'package:learning_helper/db/global.dart';
 import 'package:learning_helper/db/user.dart';
 
@@ -12,17 +14,23 @@ class Signup extends StatefulWidget {
   State<StatefulWidget> createState() => _SignupState();
 }
 
-class _SignupState extends State<Signup>{
+class _SignupState extends State<Signup> {
+  String? _errorMessege;
+
   Future<void> _createNewUser() async {
     try {
+      setState(() {
+        _errorMessege = null;
+      });
+
       final name = _nameController.text.trim();
       final email = _emailController.text.trim();
 
       final UserCredential userCredential = await FirebaseAuth.instance
-        .createUserWithEmailAndPassword(email: email, password: email);
+          .createUserWithEmailAndPassword(email: email, password: email);
 
       // Future.delayed(Durations.extralong4);
-      
+
       final uid = userCredential.user!.uid;
 
       await userCredential.user!.updateDisplayName(name);
@@ -31,14 +39,15 @@ class _SignupState extends State<Signup>{
 
       await _setCurrentUser(userId: uid, name: name, email: email);
 
-      if (mounted) {
-        
-      }
+      if (mounted) {}
     } on FirebaseException catch (e) {
+      setState(() {
+        _errorMessege = e.message;
+      });
+
       if (kDebugMode) {
         print(e.code);
       }
-
     } catch (e) {
       if (kDebugMode) {
         print(e);
@@ -51,12 +60,11 @@ class _SignupState extends State<Signup>{
     required String name,
     required String email,
   }) async {
-    final DatabaseReference userRefrence = FirebaseDatabase.instance.ref('users/$userId');
+    final DatabaseReference userRefrence = FirebaseDatabase.instance.ref(
+      'users/$userId',
+    );
 
-    await userRefrence.set({
-      'name': name,
-      'email': email,
-    });
+    await userRefrence.set({'name': name, 'email': email});
   }
 
   Future<void> _setCurrentUser({
@@ -64,12 +72,7 @@ class _SignupState extends State<Signup>{
     required String name,
     required String email,
   }) async {
-
-    currentUser = User(
-      uid: userId,
-      name: name,
-      email: email,
-    );
+    currentUser = User(uid: userId, name: name, email: email);
   }
 
   final TextEditingController _nameController = TextEditingController();
@@ -157,7 +160,7 @@ class _SignupState extends State<Signup>{
           ),
         ),
       ),
-      validator:(value) {
+      validator: (value) {
         if (value == null || value.trim().isEmpty) {
           return 'Password cannot be empty';
         }
@@ -171,33 +174,48 @@ class _SignupState extends State<Signup>{
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 20,
-            children: [
-              Text('Signup', style: TextTheme.of(context).titleLarge),
-              _nameField,
-              _emailField,
-              _passwordField,
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _createNewUser();
-                  }
-                }, 
-                child: Text(
-                  'submit',
-                  style: TextTheme.of(context).labelLarge,
-                )
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 20,
+          children: [
+            _nameField,
+            _emailField,
+            _passwordField,
+            SizedBox(height: 10),
+            CupertinoButton.filled(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  _createNewUser();
+                }
+              },
+              color: secondaryColor,
+              minimumSize: Size(775, 50),
+              mouseCursor: SystemMouseCursors.click,
+              child: Expanded(
+                child: Center(
+                  child: Text(
+                    'Login with email and password',
+                    style: TextTheme.of(context).labelLarge?.copyWith(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ),
-            ],
-          ),
+            ),
+            if (_errorMessege != null)
+              Text(
+                _errorMessege!,
+                style: TextTheme.of(
+                  context,
+                ).bodySmall?.copyWith(color: Colors.red),
+              ),
+          ],
         ),
       ),
     );
