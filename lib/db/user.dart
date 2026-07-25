@@ -8,23 +8,25 @@ class User {
   final String uid;
   String name;
   String email;
+  String? photoURL;
 
-  User({required this.uid, this.name = anonyName, this.email = anonyEmail});
+  User({required this.uid, this.name = anonyName, this.email = anonyEmail, this.photoURL});
 
-  User.fromUID({required this.uid, String? name, String? email})
-    : name = anonyName,
-      email = anonyEmail {
+  User.fromUID({required this.uid, String? name, String? email, this.photoURL})
+    : name = name ?? anonyName,
+      email = email ?? anonyEmail {
     try {
       final ref = FirebaseDatabase.instance.ref('users/$uid');
-      if (name != null) {
-        this.name = name;
-      } else {
+      if (name == null) {
         _setNameFromData(ref);
       }
-      if (email != null) {
-        this.email = email;
-      } else {
+
+      if (email == null) {
         _setEmailFromData(ref);
+      }
+      
+      if (photoURL == null) {
+        _setPhotoURL(ref);
       }
     } on FirebaseAuthException catch (e) {
       if (kDebugMode) print('FirebaseAuth Exception ${e.code} - defaulting user');
@@ -43,5 +45,10 @@ class User {
   void _setEmailFromData(DatabaseReference ref) async {
     var event = await ref.child('email').once();
     email = tryCast(event.snapshot.value) ?? '';
+  }
+
+  void _setPhotoURL(DatabaseReference ref) async {
+    var event = await ref.child('photoURL').once();
+    photoURL = tryCast(event.snapshot.value);
   }
 }

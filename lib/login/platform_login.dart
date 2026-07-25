@@ -256,12 +256,13 @@ class _SocialLoginState extends State<SocialLogin> {
     required String userId,
     required String name,
     required String email,
+    String? photoURL
   }) async {
     final DatabaseReference userRefrence = FirebaseDatabase.instance.ref(
       'users/$userId',
     );
 
-    await userRefrence.set({'name': name, 'email': email});
+    await userRefrence.set({'name': name, 'email': email, 'photoURL': ?photoURL});
   }
 
   Future<void> _handleUserSession(UserCredential userCredential) async {
@@ -276,9 +277,11 @@ class _SocialLoginState extends State<SocialLogin> {
 
     final snapshot = await ref.get();
     if (!snapshot.exists) {
-      await _createDatabaseUser(userId: uid, name: name, email: email);
+      await _createDatabaseUser(userId: uid, name: name, email: email, photoURL: firebaseUser.photoURL);
     }
 
-    currentUser = User(uid: uid, name: name, email: email);
+    setState(() {
+      currentUser = User(uid: uid, name: name, email: email);
+    });
   }
 }
