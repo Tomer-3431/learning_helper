@@ -1,7 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:learning_helper/constants/color_constants.dart';
-import 'package:learning_helper/db/global.dart';
 import 'package:learning_helper/login/platform_login.dart';
 import 'package:learning_helper/login/login.dart';
 import 'package:learning_helper/login/signup.dart';
@@ -66,11 +65,21 @@ class _SigninScreenState extends State<SigninScreen> {
     TextSpan subtitle = TextSpan(
       children: [
         TextSpan(text: hintText, style: TextTheme.of(context).bodyLarge),
+        TextSpan(text: ' '),
         TextSpan(
           text: actionText,
-          style: TextTheme.of(
-            context,
-          ).bodyLarge?.copyWith(color: primaryColor),
+          style: TextTheme.of(context).bodyLarge?.copyWith(
+            color: Colors.transparent,
+            shadows: [
+              Shadow(
+                color: primaryColor,
+                offset: Offset(0, -4)
+              )
+            ],
+            fontWeight: FontWeight.bold,
+            decoration: TextDecoration.underline,
+            decorationColor: primaryColor,
+          ),
           mouseCursor: SystemMouseCursors.click,
           recognizer: TapGestureRecognizer()..onTap = _hadleDiffrenetAuthAction,
         ),
@@ -99,33 +108,26 @@ class _SigninScreenState extends State<SigninScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           spacing: 10,
           children: [
-            Text(currentUser?.name ?? ''),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Spacer(),
-                Container(
-                  constraints: BoxConstraints(
-                    maxWidth: 900
-                  ),
-                ),
+                Container(constraints: BoxConstraints(maxWidth: 900)),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildHeader(),
-                    SizedBox(
-                      height: 20,
-                    ),
+                    SizedBox(height: 20),
                     switch (_currentAuthState) {
                       AuthState.signup => Signup(),
-                      AuthState.login => Login()
+                      AuthState.login => Login(),
                     },
-                    SizedBox(height: 20,),
-                    SocialLogin()
+                    SizedBox(height: 20),
+                    SocialLogin(),
                   ],
                 ),
-                Spacer()
+                Spacer(),
               ],
             ),
           ],
