@@ -89,6 +89,9 @@ class _LoginState extends State<Login> {
         labelText: 'Email',
         hint: Text('Enter Your Email: '),
       ),
+      onChanged: (value) {
+        _formKey.currentState?.clearError();
+      },
       validator: (value) {
         if (value == null || value.trim().isEmpty) {
           return 'Email address cannot be empty';
@@ -132,6 +135,9 @@ class _LoginState extends State<Login> {
           ),
         ),
       ),
+      onChanged: (value) {
+        _formKey.currentState?.clearError();
+      },
       validator: (value) {
         if (value == null || value.trim().isEmpty) {
           return 'Password cannot be empty';

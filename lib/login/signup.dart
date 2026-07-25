@@ -95,6 +95,9 @@ class _SignupState extends State<Signup> {
         labelText: 'Email',
         hint: Text('Enter Your Email: '),
       ),
+      onChanged: (value) {
+        _formKey.currentState?.clearError();
+      },
       validator: (value) {
         if (value == null || value.trim().isEmpty) {
           return 'Email address cannot be empty';
@@ -123,6 +126,9 @@ class _SignupState extends State<Signup> {
         labelText: 'Name',
         hint: Text('Enter Your Name: '),
       ),
+      onChanged: (value) {
+        _formKey.currentState?.clearError();
+      },
       validator: (value) {
         if (value == null || value.trim().isEmpty) {
           return 'Name field cannot be empty';
@@ -160,6 +166,9 @@ class _SignupState extends State<Signup> {
           ),
         ),
       ),
+      onChanged: (value) {
+        _formKey.currentState?.clearError();
+      },
       validator: (value) {
         if (value == null || value.trim().isEmpty) {
           return 'Password cannot be empty';
