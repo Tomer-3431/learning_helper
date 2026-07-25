@@ -36,24 +36,24 @@ String githubSVG = '''
 class _SocialLoginState extends State<SocialLogin> {
   String? _errorMessege;
 
-  final String redirectUri = 'https://learning-helper.web.app/__/auth/handler';
-  late final GoogleSignInArgs googleArgs;
-  late final GitHubSignInArgs githubArgs;
+  final String _redirectUri = 'https://learning-helper.web.app/__/auth/handler';
+  late final GoogleSignInArgs _googleArgs;
+  late final GitHubSignInArgs _githubArgs;
 
   @override
   void initState() {
     super.initState();
 
-    googleArgs = GoogleSignInArgs(
+    _googleArgs = GoogleSignInArgs(
       clientId: webClientId,
-      redirectUri: redirectUri,
+      redirectUri: _redirectUri,
       scope: 'email profile',
     );
 
-    githubArgs = GitHubSignInArgs(
+    _githubArgs = GitHubSignInArgs(
       clientId: githubClientId,
       clientSecret: githubClientSecret,
-      redirectUri: redirectUri,
+      redirectUri: _redirectUri,
       scope: 'read:user user:email'
     );
   }
@@ -175,7 +175,7 @@ class _SocialLoginState extends State<SocialLogin> {
     });
 
     try {
-      final AuthResult? result = await DesktopWebviewAuth.signIn(googleArgs);
+      final AuthResult? result = await DesktopWebviewAuth.signIn(_googleArgs);
 
       if (result == null || result.accessToken == null) {
         setState(() {
@@ -219,7 +219,7 @@ class _SocialLoginState extends State<SocialLogin> {
     setState(() => _errorMessege = null);
 
     try {
-      final AuthResult? result = await DesktopWebviewAuth.signIn(githubArgs);
+      final AuthResult? result = await DesktopWebviewAuth.signIn(_githubArgs);
 
       if (result == null || result.accessToken == null || result.accessToken == null) {
         setState(() {
