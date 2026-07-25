@@ -1,4 +1,5 @@
 import 'package:desktop_webview_auth/desktop_webview_auth.dart';
+import 'package:desktop_webview_auth/github.dart';
 import 'package:desktop_webview_auth/google.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:firebase_database/firebase_database.dart';
@@ -34,9 +35,10 @@ String githubSVG = '''
 
 class _SocialLoginState extends State<SocialLogin> {
   String? _errorMessege;
-  
+
   final String redirectUri = 'https://learning-helper.web.app/__/auth/handler';
   late final GoogleSignInArgs googleArgs;
+  late final GitHubSignInArgs githubArgs;
 
   @override
   void initState() {
@@ -45,7 +47,14 @@ class _SocialLoginState extends State<SocialLogin> {
     googleArgs = GoogleSignInArgs(
       clientId: webClientId,
       redirectUri: redirectUri,
-      scope: 'email profile'
+      scope: 'email profile',
+    );
+
+    githubArgs = GitHubSignInArgs(
+      clientId: githubClientId,
+      clientSecret: githubClientSecret,
+      redirectUri: redirectUri,
+      scope: 'read:user user:email'
     );
   }
 
@@ -181,7 +190,8 @@ class _SocialLoginState extends State<SocialLogin> {
         accessToken: result.accessToken,
       );
 
-      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      final UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithCredential(credential);
 
       await _handleUserSession(userCredential);
     } on FirebaseAuthException catch (e) {
@@ -209,45 +219,21 @@ class _SocialLoginState extends State<SocialLogin> {
     setState(() => _errorMessege = null);
 
     try {
-      // final AuthCredential credential;
+      final AuthResult? result = await DesktopWebviewAuth.signIn(githubArgs);
 
-      // if (_isDesktop) {
-      //   // Desktop (Windows) OAuth Flow
-      //   final githubSignInArgs = GithubSignInArgs(
-      //     clientId: _githubClientId,
-      //     clientSecret: _githubClientSecret,
-      //     redirectUrl: _githubRedirectUrl,
-      //     scope: 'read:user user:email',
-      //   );
+      if (result == null || result.accessToken == null || result.accessToken == null) {
+        setState(() {
+          _errorMessege = 'Github sign in failed';
+        });
 
-      //   final result = await desktop_auth.DesktopWebviewAuth.signIn(
-      //     githubSignInArgs,
-      //   );
+        if (kDebugMode) print('Gtihbu Sign in failed');
+        return;
+      }
 
-      //   if (result == null) return;
+      final AuthCredential credential = GithubAuthProvider.credential(result.accessToken!);
+      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
 
-      //   credential = GithubAuthProvider.credential(result.accessToken!);
-      // } else if (kIsWeb) {
-      //   // Web Flow
-      //   final GithubAuthProvider githubProvider = GithubAuthProvider();
-      //   final userCredential = await FirebaseAuth.instance.signInWithPopup(
-      //     githubProvider,
-      //   );
-      //   await _handleUserSession(userCredential);
-      //   return;
-      // } else {
-      //   // Mobile Flow
-      //   final GithubAuthProvider githubProvider = GithubAuthProvider();
-      //   final userCredential = await FirebaseAuth.instance.signInWithProvider(
-      //     githubProvider,
-      //   );
-      //   await _handleUserSession(userCredential);
-      //   return;
-      // }
-
-      // final UserCredential userCredential = await FirebaseAuth.instance
-      //     .signInWithCredential(credential);
-      // await _handleUserSession(userCredential);
+      await _handleUserSession(userCredential);
     } on FirebaseAuthException catch (e) {
       setState(() {
         _errorMessege = 'GitHub Auth Exception: ${e.message}';
