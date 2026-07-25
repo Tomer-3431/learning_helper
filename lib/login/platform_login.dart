@@ -54,114 +54,123 @@ class _SocialLoginState extends State<SocialLogin> {
       clientId: githubClientId,
       clientSecret: githubClientSecret,
       redirectUri: _redirectUri,
-      scope: 'read:user user:email'
+      scope: 'read:user user:email',
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      spacing: 20,
-      children: [
-        Text(
-          'Login or Signup through Social Platform: ',
-          style: TextTheme.of(context).labelLarge,
-        ),
-        SizedBox(height: 50),
-        if (_errorMessege != null) ...[
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        spacing: 10,
+        children: [
           Text(
-            _errorMessege!,
-            style: TextTheme.of(context).bodySmall!.copyWith(color: Colors.red),
+            'Login or Signup through Social Platform: ',
+            style: TextTheme.of(context).labelLarge,
           ),
-          SizedBox(height: 5),
-        ] else
-          SizedBox(height: 10),
-        Container(
-          constraints: BoxConstraints(maxHeight: 50, maxWidth: 780),
-          child: OutlinedButton(
-            onPressed: _signinWithGoogle,
-            style: OutlinedButton.styleFrom(
-              backgroundColor: Color(0xFF131314),
-              foregroundColor: Color(0xFFE3E3E3),
-              side: BorderSide(color: Color(0xFF8E918F), width: 1),
-              shape: StadiumBorder(),
-              padding: EdgeInsets.only(left: 12, right: 20),
+          if (_errorMessege != null) ...[
+            Text(
+              _errorMessege!,
+              style: TextTheme.of(
+                context,
+              ).bodySmall!.copyWith(color: Colors.red),
             ),
-            child: Row(
-              spacing: 12,
-              mainAxisAlignment: .start,
-              crossAxisAlignment: .center,
-              children: [
-                Container(
-                  width: 30,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    // color: Colors.white,
-                    shape: BoxShape.circle,
+            SizedBox(height: 5),
+          ] else
+            SizedBox(height: 10),
+          Column(
+            spacing: 20,
+            children: [
+              Container(
+                constraints: BoxConstraints(maxHeight: 50, maxWidth: 780),
+                child: OutlinedButton(
+                  onPressed: _signinWithGoogle,
+                  style: OutlinedButton.styleFrom(
+                    backgroundColor: Color(0xFF131314),
+                    foregroundColor: Color(0xFFE3E3E3),
+                    side: BorderSide(color: Color(0xFF8E918F), width: 1),
+                    shape: StadiumBorder(),
+                    padding: EdgeInsets.only(left: 12, right: 20),
                   ),
-                  padding: EdgeInsets.all(2),
-                  margin: EdgeInsets.symmetric(vertical: 4),
-                  child: SvgPicture.string(googleSVG),
-                ),
-                Spacer(),
-                Text(
-                  'Continue with Google',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: 0.25,
-                    fontFamily: 'Roboto',
+                  child: Row(
+                    spacing: 12,
+                    mainAxisAlignment: .start,
+                    crossAxisAlignment: .center,
+                    children: [
+                      Container(
+                        width: 30,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          // color: Colors.white,
+                          shape: BoxShape.circle,
+                        ),
+                        padding: EdgeInsets.all(2),
+                        margin: EdgeInsets.symmetric(vertical: 4),
+                        child: SvgPicture.string(googleSVG),
+                      ),
+                      Spacer(),
+                      Text(
+                        'Continue with Google',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 0.25,
+                          fontFamily: 'Roboto',
+                        ),
+                      ),
+                      Spacer(),
+                    ],
                   ),
                 ),
-                Spacer(),
-              ],
-            ),
+              ),
+              Container(
+                constraints: BoxConstraints(maxHeight: 50, maxWidth: 780),
+                child: OutlinedButton(
+                  onPressed: _signinWithGithub,
+                  style: OutlinedButton.styleFrom(
+                    backgroundColor: Color(0xFF131314),
+                    foregroundColor: Color(0xFFE3E3E3),
+                    side: BorderSide(color: Color(0xFF8E918F), width: 1),
+                    shape: StadiumBorder(),
+                    padding: EdgeInsets.only(left: 12, right: 20),
+                  ),
+                  child: Row(
+                    spacing: 12,
+                    mainAxisAlignment: .start,
+                    crossAxisAlignment: .center,
+                    children: [
+                      Container(
+                        width: 30,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                        ),
+                        padding: EdgeInsets.all(2),
+                        margin: EdgeInsets.symmetric(vertical: 4),
+                        child: SvgPicture.string(githubSVG),
+                      ),
+                      Spacer(),
+                      Text(
+                        'Continue with github',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 0.25,
+                          fontFamily: 'Roboto',
+                        ),
+                      ),
+                      Spacer(),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-        ),
-        Container(
-          constraints: BoxConstraints(maxHeight: 50, maxWidth: 780),
-          child: OutlinedButton(
-            onPressed: _signinWithGithub,
-            style: OutlinedButton.styleFrom(
-              backgroundColor: Color(0xFF131314),
-              foregroundColor: Color(0xFFE3E3E3),
-              side: BorderSide(color: Color(0xFF8E918F), width: 1),
-              shape: StadiumBorder(),
-              padding: EdgeInsets.only(left: 12, right: 20),
-            ),
-            child: Row(
-              spacing: 12,
-              mainAxisAlignment: .start,
-              crossAxisAlignment: .center,
-              children: [
-                Container(
-                  width: 30,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                  ),
-                  padding: EdgeInsets.all(2),
-                  margin: EdgeInsets.symmetric(vertical: 4),
-                  child: SvgPicture.string(githubSVG),
-                ),
-                Spacer(),
-                Text(
-                  'Continue with github',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: 0.25,
-                    fontFamily: 'Roboto',
-                  ),
-                ),
-                Spacer(),
-              ],
-            ),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -217,7 +226,9 @@ class _SocialLoginState extends State<SocialLogin> {
     try {
       final AuthResult? result = await DesktopWebviewAuth.signIn(_githubArgs);
 
-      if (result == null || result.accessToken == null || result.accessToken == null) {
+      if (result == null ||
+          result.accessToken == null ||
+          result.accessToken == null) {
         setState(() {
           _errorMessege = 'Github sign in failed';
         });
@@ -226,8 +237,11 @@ class _SocialLoginState extends State<SocialLogin> {
         return;
       }
 
-      final AuthCredential credential = GithubAuthProvider.credential(result.accessToken!);
-      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      final AuthCredential credential = GithubAuthProvider.credential(
+        result.accessToken!,
+      );
+      final UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithCredential(credential);
 
       await _handleUserSession(userCredential);
     } on FirebaseAuthException catch (e) {
@@ -252,13 +266,17 @@ class _SocialLoginState extends State<SocialLogin> {
     required String userId,
     required String name,
     required String email,
-    String? photoURL
+    String? photoURL,
   }) async {
     final DatabaseReference userRefrence = FirebaseDatabase.instance.ref(
       'users/$userId',
     );
 
-    await userRefrence.set({'name': name, 'email': email, 'photoURL': ?photoURL});
+    await userRefrence.set({
+      'name': name,
+      'email': email,
+      'photoURL': ?photoURL,
+    });
   }
 
   Future<void> _handleUserSession(UserCredential userCredential) async {
@@ -273,7 +291,12 @@ class _SocialLoginState extends State<SocialLogin> {
 
     final snapshot = await ref.get();
     if (!snapshot.exists) {
-      await _createDatabaseUser(userId: uid, name: name, email: email, photoURL: firebaseUser.photoURL);
+      await _createDatabaseUser(
+        userId: uid,
+        name: name,
+        email: email,
+        photoURL: firebaseUser.photoURL,
+      );
     }
 
     setState(() {
