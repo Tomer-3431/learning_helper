@@ -178,6 +178,8 @@ class _SigninScreenState extends State<SigninScreen> {
     await removePrefs();
     isAnonymous = true;
     currentUser = User(uid: '0');
+    await FirebaseAuth.instance.signInAnonymously();
+
     if (mounted) {
       navigateToHome(context);
     }
