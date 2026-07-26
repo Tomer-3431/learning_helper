@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:learning_helper/constants/color_constants.dart';
 import 'package:learning_helper/db/db_constants.dart';
 import 'package:learning_helper/db/global.dart';
+import 'package:learning_helper/quizMaker/quiz_maker_general_screen.dart';
 
 class Sidebar extends StatefulWidget {
   const Sidebar({super.key});
@@ -40,9 +41,9 @@ class _SidebarState extends State<Sidebar> {
             ),
             SizedBox(height: 10),
             _navRow(
-              icon: Icons.quiz,
-              label: 'Quiz Select',
-              destination: Container(),
+              icon: Icons.construction,
+              label: 'Quiz Maker',
+              destination: QuizMakerGeneralScreen(),
             ),
           ],
         ),
