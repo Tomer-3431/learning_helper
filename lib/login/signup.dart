@@ -1,11 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart' hide User;
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:learning_helper/constants/color_constants.dart';
 import 'package:learning_helper/db/global.dart';
-import 'package:learning_helper/db/user.dart';
+import 'package:learning_helper/login/signin_utils.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -35,11 +34,15 @@ class _SignupState extends State<Signup> {
 
       await userCredential.user!.updateDisplayName(name);
 
-      await _createDatabaseUser(userId: uid, name: name, email: email);
+      await createDatabaseUser(userId: uid, name: name, email: email);
 
-      await _setCurrentUser(userId: uid, name: name, email: email);
+      setCurrentUser(userId: uid, name: name, email: email);
 
-      if (mounted) {}
+      saveUserPrefs(currentUser!);
+
+      if (mounted) {
+        navigateToHome(context);
+      }
     } on FirebaseException catch (e) {
       setState(() {
         _errorMessege = e.message;
@@ -53,26 +56,6 @@ class _SignupState extends State<Signup> {
         print(e);
       }
     }
-  }
-
-  Future<void> _createDatabaseUser({
-    required String userId,
-    required String name,
-    required String email,
-  }) async {
-    final DatabaseReference userRefrence = FirebaseDatabase.instance.ref(
-      'users/$userId',
-    );
-
-    await userRefrence.set({'name': name, 'email': email});
-  }
-
-  Future<void> _setCurrentUser({
-    required String userId,
-    required String name,
-    required String email,
-  }) async {
-    currentUser = User(uid: userId, name: name, email: email);
   }
 
   final TextEditingController _nameController = TextEditingController();

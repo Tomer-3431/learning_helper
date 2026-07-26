@@ -2,12 +2,12 @@ import 'package:desktop_webview_auth/desktop_webview_auth.dart';
 import 'package:desktop_webview_auth/github.dart';
 import 'package:desktop_webview_auth/google.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:learning_helper/db/db_constants.dart';
 import 'package:learning_helper/db/global.dart';
-import 'package:learning_helper/db/user.dart';
+import 'package:learning_helper/login/signin_utils.dart';
 import 'package:learning_helper/secrets/secrets.dart';
 
 class SocialLogin extends StatefulWidget {
@@ -262,45 +262,29 @@ class _SocialLoginState extends State<SocialLogin> {
     }
   }
 
-  Future<void> _createDatabaseUser({
-    required String userId,
-    required String name,
-    required String email,
-    String? photoURL,
-  }) async {
-    final DatabaseReference userRefrence = FirebaseDatabase.instance.ref(
-      'users/$userId',
-    );
-
-    await userRefrence.set({
-      'name': name,
-      'email': email,
-      'photoURL': ?photoURL,
-    });
-  }
-
   Future<void> _handleUserSession(UserCredential userCredential) async {
     final firebaseUser = userCredential.user;
     if (firebaseUser == null) return;
 
     final String uid = firebaseUser.uid;
-    final String name = firebaseUser.displayName ?? '';
-    final String email = firebaseUser.email ?? '';
+    final String name = firebaseUser.displayName ?? anonyName;
+    final String email = firebaseUser.email ?? anonyEmail;
+    final String? photoUrl = firebaseUser.photoURL;
 
-    final DatabaseReference ref = FirebaseDatabase.instance.ref('users/$uid');
-
-    final snapshot = await ref.get();
-    if (!snapshot.exists) {
-      await _createDatabaseUser(
+    if (await isNewUser(uid)) {
+      await createDatabaseUser(
         userId: uid,
         name: name,
         email: email,
-        photoURL: firebaseUser.photoURL,
+        photoURL: photoUrl,
       );
     }
 
-    setState(() {
-      currentUser = User(uid: uid, name: name, email: email);
-    });
+    setCurrentUser(userId: uid, name: name, email: email, photoURL: photoUrl);
+    saveUserPrefs(currentUser!);
+
+    if (mounted) {
+      navigateToHome(context);
+    }
   }
 }

@@ -4,8 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:learning_helper/constants/color_constants.dart';
 import 'package:learning_helper/db/global.dart';
-import 'package:learning_helper/db/user.dart';
-import 'package:learning_helper/home/home_screen.dart';
+import 'package:learning_helper/login/signin_utils.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -31,14 +30,16 @@ class _LoginState extends State<Login> {
 
       final uid = userCredential.user!.uid;
 
-      _setCurrentUser(
+      getCurrentUser(
         userId: uid,
         name: userCredential.user!.displayName,
         email: userCredential.user!.email,
       );
 
+      saveUserPrefs(currentUser!);
+
       if (mounted) {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
+        navigateToHome(context);
       }
     } on FirebaseAuthException catch (e) {
       setState(() {
@@ -61,14 +62,6 @@ class _LoginState extends State<Login> {
         print(e);
       }
     }
-  }
-
-  Future<void> _setCurrentUser({
-    required String userId,
-    String? name,
-    String? email,
-  }) async {
-    currentUser = User.fromUID(uid: userId, name: name, email: email);
   }
 
   final TextEditingController _emailController = TextEditingController();

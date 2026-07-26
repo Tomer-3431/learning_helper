@@ -1,8 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:learning_helper/constants/color_constants.dart';
+import 'package:learning_helper/db/global.dart';
+import 'package:learning_helper/db/user.dart';
+import 'package:learning_helper/home/home_screen.dart';
 import 'package:learning_helper/login/platform_login.dart';
 import 'package:learning_helper/login/login.dart';
+import 'package:learning_helper/login/signin_utils.dart';
 import 'package:learning_helper/login/signup.dart';
 
 class SigninScreen extends StatefulWidget {
@@ -22,6 +27,7 @@ class _SigninScreenState extends State<SigninScreen> {
     super.initState();
 
     _currentAuthState = AuthState.login;
+    checkPrefs(context);
   }
 
   void _hadleDiffrenetAuthAction() {
@@ -70,12 +76,7 @@ class _SigninScreenState extends State<SigninScreen> {
           text: actionText,
           style: TextTheme.of(context).bodyLarge?.copyWith(
             color: Colors.transparent,
-            shadows: [
-              Shadow(
-                color: primaryColor,
-                offset: Offset(0, -4)
-              )
-            ],
+            shadows: [Shadow(color: primaryColor, offset: Offset(0, -4))],
             fontWeight: FontWeight.bold,
             decoration: TextDecoration.underline,
             decorationColor: primaryColor,
@@ -100,39 +101,85 @@ class _SigninScreenState extends State<SigninScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Signin Screen')),
-      body: Padding(
-        padding: EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          spacing: 10,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
+    return StreamBuilder(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, asyncSnapshot) {
+        if (currentUser != null) {
+          return HomeScreen();
+        }
+
+        if (asyncSnapshot.hasData) {
+          final user = asyncSnapshot.data!;
+          isAnonymous = false;
+          currentUser = User.fromUID(uid: user.uid);
+          return HomeScreen();
+        }
+
+        return Scaffold(
+          appBar: AppBar(title: Text('Signin Screen')),
+          body: Padding(
+            padding: EdgeInsets.all(32),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              spacing: 10,
               children: [
-                Spacer(),
-                Container(constraints: BoxConstraints(maxWidth: 900)),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    _buildHeader(),
-                    SizedBox(height: 20),
-                    switch (_currentAuthState) {
-                      AuthState.signup => Signup(),
-                      AuthState.login => Login(),
-                    },
-                    SizedBox(height: 20),
-                    SocialLogin(),
+                    Spacer(),
+                    Container(constraints: BoxConstraints(maxWidth: 900)),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildHeader(),
+                        SizedBox(height: 20),
+                        switch (_currentAuthState) {
+                          AuthState.signup => Signup(),
+                          AuthState.login => Login(),
+                        },
+                        SizedBox(height: 20),
+                        Text.rich(
+                          TextSpan(
+                            text: 'Enter Anonymously',
+                            style: TextTheme.of(context).bodyLarge?.copyWith(
+                              color: Colors.transparent,
+                              shadows: [
+                                Shadow(
+                                  color: primaryColor,
+                                  offset: Offset(0, -4),
+                                ),
+                              ],
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.underline,
+                              decorationColor: primaryColor,
+                            ),
+                            mouseCursor: SystemMouseCursors.click,
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = _loginAnonymously,
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        SocialLogin(),
+                      ],
+                    ),
+                    Spacer(),
                   ],
                 ),
-                Spacer(),
               ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
+  }
+
+  void _loginAnonymously() async {
+    await removePrefs();
+    isAnonymous = true;
+    currentUser = User(uid: '0');
+    if (mounted) {
+      navigateToHome(context);
+    }
   }
 }
