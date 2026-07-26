@@ -51,4 +51,6 @@ class User {
     var event = await ref.child('photoURL').once();
     photoURL = tryCast(event.snapshot.value);
   }
+
+  bool haveInitalized() => name != anonyName;
 }
